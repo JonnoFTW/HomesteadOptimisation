@@ -1,0 +1,6 @@
+/bin/
+*.7z
+*.dat
+*.plt
+org.*
+.project
