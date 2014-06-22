@@ -1,7 +1,3 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 class Main {
@@ -61,60 +57,42 @@ class Main {
 			return x + "," + y;
 		}
 	}
-
+	/**
+	 * Solve the homestead problem if we use a star.
+	 */
 	public void solveMid() {
 		Point minimum = null;
-		Point maximum = null;
 		double totalLengthMin = Double.MAX_VALUE;
-		double totalLengthMax = Double.MIN_VALUE;
-		//File f= new File("plot2.dat");
-		//try {
-		//if(!f.exists())
-		//	f.createNewFile();
 		
-		//	BufferedWriter bw = new BufferedWriter(new FileWriter(f));
-			for (double x = minX; x <= maxX; x += STEP) {
-				for (double y = minY; y <= maxY; y += STEP) {
-					Point candidate = new Point(x, y);
-					float candidateTotalLength = 0;
-					for (int i = 0; i < xPoints.length; i++) {
-						candidateTotalLength += new Point(xPoints[i], yPoints[i])
-								.distance(candidate);
-					}
-			//		bw.write(String.format("%1.2f %1.2f %1.2f%n", x,y,candidateTotalLength));
-					if (candidateTotalLength < totalLengthMin) {
-						totalLengthMin = candidateTotalLength;
-						minimum = candidate;
-					}
-					if (candidateTotalLength > totalLengthMax) {
-						totalLengthMax = candidateTotalLength;
-						maximum = candidate;
-					}
+		for (double x = minX; x <= maxX; x += STEP) {
+			for (double y = minY; y <= maxY; y += STEP) {
+				Point candidate = new Point(x, y);
+				float candidateTotalLength = 0;
+				for (int i = 0; i < xPoints.length; i++) {
+					candidateTotalLength += new Point(xPoints[i], yPoints[i])
+							.distance(candidate);
+				}
+				if (candidateTotalLength < totalLengthMin) {
+					totalLengthMin = candidateTotalLength;
+					minimum = candidate;
 				}
 			}
-			//bw.close();
-		//} catch (IOException e) {
-		//	// TODO Auto-generated catch block
-		//	e.printStackTrace();
-		//}
-		
+		}
 		System.out.println("Minimum point is :" + minimum
 				+ " with total length " + totalLengthMin);
-		System.out.println("Maximum point is :" + maximum
-				+ " with total length " + totalLengthMax);
 	}
-
+	/**
+	 * Solve the problem as though it was a line going through the area
+	 */
 	public void solveEquation() {
 		Point minimum = null;
-		Point maximum = null;
 		double totalLengthMin = Double.MAX_VALUE;
-		//double totalLengthMax = Double.MIN_VALUE;
 		Point start = null;
 		Point end = null;
 		for (double m = -500; m <= 500; m += 1) {
-			for (double c = minY; c <= 3000; c += 1) {
+			for (double c = -3000; c <= 3000; c += 1) {
 				// candidate is a line
-				// it's length is something...
+				// it's length is unkown...
 				Point candidate = new Point(m, c);
 				float candidateTotalLength = 0;
 				ArrayList<Point> points = new ArrayList<Point>(5);
@@ -147,27 +125,20 @@ class Main {
 					end = candidateEnd;
 					start = candidateStart;
 				}
-				/*if (candidateTotalLength > totalLengthMax) {
-					totalLengthMax = candidateTotalLength;
-					maximum = candidate;
-				}*/
 			}
 		}
 		System.out.println(String.format(
 				"Minimum line is : %fx+%f with total length %f from "+ start+" to "+end, minimum.x,
 				minimum.y, totalLengthMin));
-		/*System.out.println(String.format(
-				"Maximum line is : %fx+%f with total length %f", maximum.x,
-				maximum.y, totalLengthMax));*/
 	}
 
 	public static void main(String[] args) {
 		long start = System.nanoTime();
 		Main m = new Main();
 		m.setMax();
-		/*m.solveMid();
+		m.solveMid();
 		System.out.println("Found in "
-				+ ((System.nanoTime() - start) / 1000000000f));*/
+				+ ((System.nanoTime() - start) / 1000000000f));
 		start = System.nanoTime();
 		m.solveEquation();
 		System.out.println("Found in "
